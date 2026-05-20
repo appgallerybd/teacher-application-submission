@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>প্রত্যয়নপত্র ট্র্যাকার — কেন্দ্র ২৬</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f1ec;
+  --s0:#ffffff;
+  --s1:#faf8f5;
+  --s2:#efe9e0;
+  --bd:#e2d9ce;
+  --bd2:#cdc2b4;
+  --t0:#18150f;
+  --t1:#5a5248;
+  --t2:#9a9088;
+  --ac:#b86d2a;
+  --ac-bg:#fdf3ea;
+  --ac-bd:#e8c090;
+  --gr:#276e3e;
+  --gr-bg:#ebf5ef;
+  --gr-bd:#9ecfb3;
+  --re:#a83232;
+  --re-bg:#faf0f0;
+  --re-bd:#d9a0a0;
+  --bl:#20568a;
+  --bl-bg:#edf3fa;
+  --bl-bd:#96bce0;
+  --sh1:0 1px 4px rgba(0,0,0,.07);
+  --sh2:0 4px 18px rgba(0,0,0,.09);
+  --r:13px;--r2:9px;--r3:7px
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--t0);
+  font-family:'Hind Siliguri',sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased
+}
+/* ─── layout ─── */
+.wrap{max-width:800px;margin:0 auto;padding:24px 14px 90px;contain:layout}
+/* ─── animations ─── */
+@keyframes fd{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.fade{animation:fd .35s ease both}
+.fade-1{animation:fd .35s .07s ease both}
+.fade-2{animation:fd .35s .14s ease both}
+.fade-3{animation:fd .35s .21s ease both}
+/* ─── header ─── */
+.hdr{text-align:center;padding:32px 0 28px}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--ac-bg);border:1px solid var(--ac-bd);
+  border-radius:100px;padding:6px 16px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;font-weight:700;color:var(--ac);
+  margin-bottom:14px;letter-spacing:.4px
+}
+.hdr h1{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(20px,5vw,28px);font-weight:800;
+  color:var(--t0);line-height:1.25;margin-bottom:8px
+}
+.hdr p{font-size:14px;color:var(--t1);line-height:1.6}
+/* ─── stat cards ─── */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.sc{
+  background:var(--s0);border:1px solid var(--bd);
+  border-radius:var(--r);padding:15px 10px 13px;
+  text-align:center;box-shadow:var(--sh1);
+  position:relative;overflow:hidden;
+  transition:transform .18s,box-shadow .18s;
+  will-change:transform
+}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
+.sc.bl::after{background:var(--bl)}
+.sc.gr::after{background:var(--gr)}
+.sc.re::after{background:var(--re)}
+.sc-ico{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 9px;flex-shrink:0
+}
+.sc.bl .sc-ico{background:var(--bl-bg);color:var(--bl)}
+.sc.gr .sc-ico{background:var(--gr-bg);color:var(--gr)}
+.sc.re .sc-ico{background:var(--re-bg);color:var(--re)}
+.sc-num{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:24px;font-weight:800;line-height:1;margin-bottom:4px;
+  transition:color .25s
+}
+.sc.bl .sc-num{color:var(--bl)}
+.sc.gr .sc-num{color:var(--gr)}
+.sc.re .sc-num{color:var(--re)}
+.sc-lbl{font-size:11.5px;color:var(--t2);font-weight:500}
+/* ─── progress ─── */
+.prog-card{
+  background:var(--s0);border:1px solid var(--bd);
+  border-radius:var(--r);padding:18px 20px;
+  box-shadow:var(--sh1);margin-bottom:14px
+}
+.prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.prog-lbl{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--t1);font-weight:500}
+.prog-pct{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:20px;font-weight:800;color:var(--gr)
+}
+.prog-track{background:var(--s2);border-radius:100px;height:9px;overflow:hidden}
+.prog-fill{
+  height:100%;border-radius:100px;
+  background:linear-gradient(90deg,#276e3e,#3fa85e);
+  transition:width .55s cubic-bezier(.4,0,.2,1);
+  position:relative
+}
+.prog-fill::after{
+  content:'';position:absolute;right:0;top:0;bottom:0;
+  width:20px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4));
+  animation:sh 2.5s infinite
+}
+@keyframes sh{0%,100%{opacity:0}50%{opacity:1}}
+.prog-sub{display:flex;gap:14px;margin-top:10px}
+.prog-sub span{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* ─── controls ─── */
+.ctrl{
+  background:var(--s0);border:1px solid var(--bd);
+  border-radius:var(--r);padding:14px;
+  box-shadow:var(--sh1);margin-bottom:14px;
+  display:flex;flex-direction:column;gap:10px
+}
+/* search */
+.srch{position:relative}
+.srch-ico{
+  position:absolute;left:12px;top:50%;
+  transform:translateY(-50%);pointer-events:none;
+  color:var(--t2);transition:color .2s;display:flex
+}
+.srch:focus-within .srch-ico{color:var(--ac)}
+.srch-inp{
+  width:100%;background:var(--s1);
+  border:1.5px solid var(--bd);border-radius:var(--r3);
+  padding:10px 12px 10px 40px;
+  font-family:'Hind Siliguri',sans-serif;font-size:15px;color:var(--t0);
+  outline:none;transition:border-color .2s,box-shadow .2s
+}
+.srch-inp:focus{border-color:var(--ac-bd);box-shadow:0 0 0 3px rgba(184,109,42,.1)}
+.srch-inp::placeholder{color:var(--t2)}
+/* filter tabs */
+.fil-row{display:flex;gap:6px;flex-wrap:wrap}
+.fb{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--s1);border:1.5px solid var(--bd);
+  border-radius:100px;padding:6px 13px;
+  font-family:'Hind Siliguri',sans-serif;font-size:13px;
+  color:var(--t1);cursor:pointer;
+  transition:all .16s;font-weight:500;white-space:nowrap;
+  -webkit-tap-highlight-color:transparent
+}
+.fb:hover{border-color:var(--bd2);color:var(--t0)}
+.fb.on{background:var(--ac-bg);border-color:var(--ac-bd);color:var(--ac);font-weight:700}
+/* status tabs */
+.st-row{display:flex;gap:6px}
+.stb{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  background:var(--s1);border:1.5px solid var(--bd);
+  border-radius:var(--r3);padding:8px 6px;
+  font-family:'Hind Siliguri',sans-serif;font-size:12.5px;
+  color:var(--t1);cursor:pointer;
+  transition:all .16s;font-weight:500;
+  -webkit-tap-highlight-color:transparent
+}
+.stb:hover{border-color:var(--bd2);color:var(--t0)}
+.stb.on-all{background:var(--s0);border-color:var(--bd2);color:var(--t0);font-weight:600}
+.stb.on-done{background:var(--gr-bg);border-color:var(--gr-bd);color:var(--gr);font-weight:700}
+.stb.on-pend{background:var(--re-bg);border-color:var(--re-bd);color:var(--re);font-weight:700}
+/* ─── sections ─── */
+.sec{margin-bottom:6px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 2px 7px}
+.sec-left{display:flex;align-items:center;gap:9px}
+.sec-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:var(--t0)}
+.sec-pill{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:100px}
+.mini{display:flex;gap:7px;margin-bottom:9px}
+.ms{
+  background:var(--s0);border:1px solid var(--bd);
+  border-radius:var(--r3);padding:7px 10px;flex:1;
+  text-align:center;box-shadow:var(--sh1)
+}
+.ms .mn{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;line-height:1}
+.ms .ml{font-size:10.5px;color:var(--t2);margin-top:2px}
+.ms.mt .mn{color:var(--bl)}
+.ms.md .mn{color:var(--gr)}
+.ms.mp .mn{color:var(--re)}
+/* ─── teacher rows ─── */
+.tl{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.tr{
+  background:var(--s0);border:1.5px solid var(--bd);
+  border-radius:var(--r2);padding:10px 13px;
+  display:flex;align-items:center;gap:11px;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .14s,box-shadow .14s,border-color .14s,background .2s;
+  box-shadow:var(--sh1);
+  -webkit-tap-highlight-color:transparent;
+  will-change:transform
+}
+.tr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .2s}
+.tr:hover{transform:translateY(-1px);box-shadow:var(--sh2);border-color:var(--bd2)}
+.tr:active{transform:scale(.99)}
+.tr.done{background:var(--gr-bg);border-color:var(--gr-bd)}
+.tr.done::before{background:var(--gr)}
+/* checkbox */
+.cb{
+  width:21px;height:21px;border:2px solid var(--bd2);
+  border-radius:6px;flex-shrink:0;display:flex;
+  align-items:center;justify-content:center;
+  background:var(--s1);
+  transition:all .2s cubic-bezier(.34,1.56,.64,1)
+}
+.tr.done .cb{background:var(--gr);border-color:var(--gr);transform:scale(1.07)}
+.cb svg{opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+.tr.done .cb svg{opacity:1;transform:scale(1)}
+/* code */
+.tc{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:11px;font-weight:800;letter-spacing:.4px;
+  background:var(--s2);color:var(--t2);
+  border-radius:5px;padding:3px 8px;
+  flex-shrink:0;min-width:42px;text-align:center;
+  transition:all .2s
+}
+.tr.done .tc{background:rgba(39,110,62,.12);color:var(--gr)}
+/* name */
+.tn{flex:1;font-size:14px;color:var(--t0);font-weight:500;line-height:1.3;transition:color .2s}
+.tr.done .tn{color:#235c35}
+/* pill */
+.tp{
+  font-size:10.5px;font-weight:700;
+  padding:3px 9px;border-radius:100px;
+  flex-shrink:0;transition:all .2s
+}
+.tp.pd{background:var(--gr-bg);color:var(--gr);border:1px solid var(--gr-bd)}
+.tp.pp{background:var(--re-bg);color:var(--re);border:1px solid var(--re-bd)}
+/* ─── empty ─── */
+.empty{text-align:center;padding:48px 20px;color:var(--t2);animation:fd .3s ease}
+.empty p{font-size:14px;margin-top:10px}
+/* ─── toast ─── */
+.toast{
+  position:fixed;bottom:26px;left:50%;
+  transform:translateX(-50%) translateY(70px);
+  background:var(--s0);border:1.5px solid var(--gr-bd);
+  color:var(--gr);border-radius:100px;
+  padding:9px 22px 9px 16px;font-size:13px;
+  box-shadow:var(--sh2);z-index:999;
+  transition:transform .32s cubic-bezier(.34,1.56,.64,1),opacity .28s;
+  white-space:nowrap;display:flex;align-items:center;gap:7px;opacity:0
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* ─── responsive ─── */
+@media(max-width:440px){
+  .sc-num{font-size:20px}
+  .tp{display:none}
+  .tn{font-size:13px}
+  .hdr h1{font-size:19px}
+  .fb .fb-txt{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr fade">
+  <div class="badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+    কেন্দ্র ২৬ &nbsp;·&nbsp; লোহাগড়া
+  </div>
+  <h1>প্রত্যয়নপত্র জমা ট্র্যাকার</h1>
+  <p>শিক্ষকদের বেতন প্রত্যয়নপত্র জমার অগ্রগতি পর্যবেক্ষণ</p>
+</div>
+
+<!-- STATS -->
+<div class="stat-row fade-1">
+  <div class="sc bl">
+    <div class="sc-ico">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="sc-num" id="n-total">0</div>
+    <div class="sc-lbl">মোট শিক্ষক</div>
+  </div>
+  <div class="sc gr">
+    <div class="sc-ico">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <div class="sc-num" id="n-done">0</div>
+    <div class="sc-lbl">জমা দিয়েছেন</div>
+  </div>
+  <div class="sc re">
+    <div class="sc-ico">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <div class="sc-num" id="n-left">0</div>
+    <div class="sc-lbl">বাকি আছেন</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-card fade-2">
+  <div class="prog-top">
+    <div class="prog-lbl">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      সামগ্রিক অগ্রগতি
+    </div>
+    <div class="prog-pct" id="pct-lbl">০%</div>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="prog-sub">
+    <span><span class="dot" style="background:var(--gr)"></span><span id="sub-done">০ জন জমা</span></span>
+    <span><span class="dot" style="background:var(--re)"></span><span id="sub-left">০ জন বাকি</span></span>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="ctrl fade-3">
+  <div class="srch">
+    <span class="srch-ico">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input class="srch-inp" id="q" type="text" placeholder="কোড নম্বর বা নাম লিখুন…" autocomplete="off" spellcheck="false" oninput="onSearch()">
+  </div>
+  <div class="fil-row">
+    <button class="fb on" data-cat="all" onclick="setCat(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="fb-txt">সকল</span>
+    </button>
+    <button class="fb" data-cat="prak" onclick="setCat(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="fb-txt">প্রাক প্রাথমিক</span>
+    </button>
+    <button class="fb" data-cat="boyosko" onclick="setCat(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span class="fb-txt">বয়স্ক</span>
+    </button>
+    <button class="fb" data-cat="quran" onclick="setCat(this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span class="fb-txt">সহজ কুরআন</span>
+    </button>
+  </div>
+  <div class="st-row">
+    <button class="stb on-all" id="sb-all" onclick="setSt('all')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      সবাই
+    </button>
+    <button class="stb" id="sb-done" onclick="setSt('done')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="20 6 9 17 4 12"/></svg>
+      জমা দিয়েছেন
+    </button>
+    <button class="stb" id="sb-pend" onclick="setSt('pend')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      বাকি
+    </button>
+  </div>
+</div>
+
+<!-- MAIN LIST -->
+<div id="main"></div>
+
+</div><!-- /wrap -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="20 6 9 17 4 12"/></svg>
+  সংরক্ষিত হয়েছে
+</div>
+
+<script>
+/* ── DATA ─────────────────────────────────────────────────────── */
+var D=[
+  {c:'prak',k:'138',n:'তমালিকা খানম'},
+  {c:'prak',k:'139',n:'মোঃ আমিনুল ইসলাম,'},
+  {c:'prak',k:'140',n:'মোঃ মারুফ বিল্লাহ'},
+  {c:'prak',k:'141',n:'মোছা: রোজিনা খানম'},
+  {c:'prak',k:'142',n:'রিক্তা খানম'},
+  {c:'prak',k:'143',n:'মো: মফিজুর রহমান'},
+  {c:'prak',k:'144',n:'মো: শাহজাহান মোল্যা'},
+  {c:'prak',k:'145',n:'মোছা: সাদিয়া সুলতানা'},
+  {c:'prak',k:'146',n:'মোসা: সুরাইয়া পারভীন'},
+  {c:'prak',k:'147',n:'মোসা: ফাতেমা বেগম'},
+  {c:'prak',k:'148',n:'নূরআলম ছিদ্দিক'},
+  {c:'prak',k:'149',n:'আকলিমা খাতুন'},
+  {c:'prak',k:'150',n:'সেলিনা আরব'},
+  {c:'prak',k:'151',n:'মোছাঃ আফরোজা বেগম'},
+  {c:'prak',k:'152',n:'সুমাইয়া খানম'},
+  {c:'prak',k:'153',n:'রহিমা খাতুন'},
+  {c:'prak',k:'154',n:'আসমা খাতুন'},
+  {c:'prak',k:'155',n:'মোছা: তাসলিমা পারভীন'},
+  {c:'prak',k:'156',n:'সীমা খানম,'},
+  {c:'prak',k:'157',n:'শিপ্রারানী রায়'},
+  {c:'prak',k:'158',n:'মো: শরিফুল ইসলাম'},
+  {c:'prak',k:'159',n:'মো: মনিরুজ্জামান'},
+  {c:'prak',k:'160',n:'মো: আজিজ আহমেদ'},
+  {c:'prak',k:'161',n:'মো: মাসুম বিলাহ'},
+  {c:'prak',k:'162',n:'মো: আবুবকরমোল্যা'},
+  {c:'prak',k:'163',n:'মো: সহিদুল ইসলাম'},
+  {c:'prak',k:'164',n:'মো: জাহিদুল ইসলাম'},
+  {c:'prak',k:'165',n:'মো: হাফিজুর রহমান'},
+  {c:'prak',k:'166',n:'মৌমিতা ইয়াসমিন'},
+  {c:'prak',k:'167',n:'নাজমুন্নাহার'},
+  {c:'prak',k:'168',n:'মো: আয়ূব হোসেন'},
+  {c:'prak',k:'169',n:'স্বর্ণা খানম,'},
+  {c:'prak',k:'170',n:'কাজী খলিলুর রহমান'},
+  {c:'prak',k:'171',n:'রহিমা খাতুন'},
+  {c:'prak',k:'172',n:'মোসা: লাকী খানম'},
+  {c:'prak',k:'173',n:'মো: হিজবুল্লাহ শেখ'},
+  {c:'prak',k:'174',n:'মো: ওহিদুর রহমান'},
+  {c:'prak',k:'175',n:'শাহানাজ খানম,'},
+  {c:'prak',k:'176',n:'মো: নজরুল ইসলাম'},
+  {c:'prak',k:'177',n:'নার্গিস বেগম'},
+  {c:'prak',k:'178',n:'মো: মনিরুজ্জামান'},
+  {c:'prak',k:'179',n:'সৈয়দ বদরুজ্জামান'},
+  {c:'prak',k:'180',n:'মোছা: সুমাইয়া ইয়াসমিন'},
+  {c:'prak',k:'181',n:'জলি খানম'},
+  {c:'prak',k:'182',n:'মোসা: সাথি খানম'},
+  {c:'prak',k:'183',n:'ফতেমা আক্তার'},
+  {c:'prak',k:'184',n:'মোসা: আরিফা আক্তার'},
+  {c:'prak',k:'185',n:'মো: মাসুদ রানা'},
+  {c:'prak',k:'186',n:'হাবিবা সুলতানা'},
+  {c:'prak',k:'187',n:'মো: সিদ্দিকুর রহমান'},
+  {c:'prak',k:'188',n:'শামছুন নাহার'},
+  {c:'prak',k:'189',n:'মো: মশিয়ার রহমান'},
+  {c:'prak',k:'190',n:'আল ইমা'},
+  {c:'prak',k:'191',n:'সুলতানা পারভীন'},
+  {c:'prak',k:'192',n:'মো: মিজবা উদ্দিন'},
+  {c:'prak',k:'193',n:'মোসা: টিকলি খানম'},
+  {c:'prak',k:'194',n:'মো: হেদায়েত ফকির'},
+  {c:'prak',k:'195',n:'মোঃ মুরাদ হোসেন'},
+  {c:'prak',k:'196',n:'মো: আবু মুছা'},
+  {c:'prak',k:'197',n:'মোসা: রুবানা বেগম'},
+  {c:'prak',k:'198',n:'মো: হাশর মুন্সি'},
+  {c:'prak',k:'199',n:'এফ,এম ইলিয়াস মেহেদী হাসান'},
+  {c:'prak',k:'200',n:'মো: কেফায়েত উল্লাহ'},
+  {c:'boyosko',k:'211',n:'মোছাঃ মুরশিদা খানম,'},
+  {c:'boyosko',k:'212',n:'শাহিনা আক্তার'},
+  {c:'quran',k:'387',n:'মো: তাওহিদুর রহমান'},
+  {c:'quran',k:'388',n:'মো: মোশারেফ হোসেন'},
+  {c:'quran',k:'389',n:'কাজী অহিদুজ্জামান'},
+  {c:'quran',k:'390',n:'মো: আশিকুর রহমান'},
+  {c:'quran',k:'391',n:'নুর আলম'},
+  {c:'quran',k:'392',n:'মো:আব্দুল্লাহ আলমামুন'},
+  {c:'quran',k:'393',n:'মো: হাবিবুল্লাহ'},
+  {c:'quran',k:'394',n:'মহিউদ্দিন শেখ'},
+  {c:'quran',k:'395',n:'মো: এনায়েতুর রহমান'},
+  {c:'quran',k:'396',n:'মো: আইয়ুব আলী খান'},
+  {c:'quran',k:'397',n:'মো: জাকারিয়া'},
+  {c:'quran',k:'398',n:'মোঃ জাহাংগীর আলম'},
+  {c:'quran',k:'399',n:'মোঃ জাবের হোসেন'},
+  {c:'quran',k:'400',n:'আব্দুল আজিজ'},
+  {c:'quran',k:'401',n:'আশরাফ আলি'},
+  {c:'quran',k:'402',n:'মো: ফারুকে আজম'},
+  {c:'quran',k:'403',n:'মোঃ মাসুম বিল্লাহ'},
+  {c:'quran',k:'404',n:'মোঃ কুতুব উদ্দীন'},
+  {c:'quran',k:'405',n:'মোঃ ফরিদ উদ্দিন'},
+  {c:'quran',k:'406',n:'মোঃ আল হেলাল'},
+  {c:'quran',k:'407',n:'মোঃ তরিকুল ইসলাম'},
+  {c:'quran',k:'408',n:'মোঃ মাহবুবুর রহমান'},
+  {c:'quran',k:'409',n:'মোঃ ইমদাদুল হক'},
+  {c:'quran',k:'410',n:'মোঃ বক্তিয়ার শেখ'},
+  {c:'quran',k:'411',n:'মোঃ আল আমিন'},
+  {c:'quran',k:'412',n:'মোঃ নুরুল ইসলাম'},
+  {c:'quran',k:'413',n:'মোঃ ফেরদৌস'},
+  {c:'quran',k:'414',n:'মাওলানা রবিউল ইসলাম,'},
+  {c:'quran',k:'415',n:'মোঃ ওমর ফারুক'},
+  {c:'quran',k:'416',n:'মোঃ মশিউর রহমান'},
+  {c:'quran',k:'417',n:'মোঃ জিয়াউর রহমান'},
+  {c:'quran',k:'418',n:'মোঃ ইউছুফ আলী খান'},
+  {c:'quran',k:'419',n:'তাওহিদুজ্জামান,'},
+  {c:'quran',k:'420',n:'মোঃ জামির হোসেন'},
+  {c:'quran',k:'421',n:'মোঃ মনিরুল ইসলাম'},
+  {c:'quran',k:'422',n:'নুর মোহাম্মাদ'},
+  {c:'quran',k:'423',n:'মো: কুতুব উদ্দীন শেখ'},
+  {c:'quran',k:'424',n:'নূর ইসলাম মুন্সী'},
+  {c:'quran',k:'425',n:'মোঃ ইয়ার আলী শেখ,'},
+  {c:'quran',k:'426',n:'বায়েজীদ হোসাইন'},
+  {c:'quran',k:'427',n:'মো: জাহিদুল মোল্যা'},
+  {c:'quran',k:'428',n:'মো: ওহিদুজ্জামান'},
+  {c:'quran',k:'429',n:'শরীফ মোস্তফা বাবুল'},
+  {c:'quran',k:'430',n:'মো: আবু সাইদ,'},
+  {c:'quran',k:'431',n:'মোঃ আঃ রহমান'},
+  {c:'quran',k:'432',n:'মো: ইকবাল হোসেন'},
+  {c:'quran',k:'433',n:'সাব্বির আহমাদ'},
+  {c:'quran',k:'434',n:'তানজিলা পারভীন'},
+  {c:'quran',k:'435',n:'মো: খালিদুল ইসলাম'},
+  {c:'quran',k:'436',n:'মাওঃ জালাল উদ্দিন'},
+  {c:'quran',k:'437',n:'মো: তুহিন মৃধা'},
+  {c:'quran',k:'438',n:'মোছা : হামিদা বেগম'},
+  {c:'quran',k:'439',n:'আল আমিন'},
+  {c:'quran',k:'440',n:'মো: শফিকুল ইসলাম'},
+  {c:'quran',k:'441',n:'নাজিম উদ্দীন'},
+  {c:'quran',k:'442',n:'মো: আ: রশিদ শেখ'},
+  {c:'quran',k:'443',n:'মুহাম্মাদ খান,'},
+  {c:'quran',k:'444',n:'মো: আকিনুর রহমান'},
+  {c:'quran',k:'445',n:'মো: ইনামুল হক শেখ'},
+  {c:'quran',k:'446',n:'মো: কেরামত আলি মোল্যা'},
+  {c:'quran',k:'447',n:'নুরুল আলম মোল্লা'},
+  {c:'quran',k:'448',n:'মো: বাবর আলী মীর'},
+  {c:'quran',k:'449',n:'মো: আব্দুল হান্নান গাজী'},
+  {c:'quran',k:'450',n:'নাঈমা খাতুন,'},
+  {c:'quran',k:'451',n:'আরজান আলী (ওবায়দুর)'},
+  {c:'quran',k:'452',n:'মোঃ সবুজ শেখ'},
+  {c:'quran',k:'453',n:'মো: আলমগীর'},
+  {c:'quran',k:'454',n:'মো: মাহবুবুর রহমান'},
+  {c:'quran',k:'455',n:'মো: আরিফুল ইসলাম'},
+  {c:'quran',k:'456',n:'সৈয়দ শাহা আলম'},
+  {c:'quran',k:'457',n:'মো: মাসুম রানা'},
+  {c:'quran',k:'458',n:'মো: রবিউল ইসলাম'},
+  {c:'quran',k:'459',n:'মো: ওসমান গণী'},
+  {c:'quran',k:'460',n:'মো: আমিনুর রহমান'},
+  {c:'quran',k:'461',n:'মোছা: ছাদিকা খাতুন'},
+  {c:'quran',k:'462',n:'মো : য়োবায়ের আহমাদ'},
+  {c:'quran',k:'463',n:'মো: তরিকুল ইসলাম'},
+  {c:'quran',k:'464',n:'ফারজানা'},
+  {c:'quran',k:'465',n:'আলী আহম্মেদ'},
+  {c:'quran',k:'466',n:'ইসমত আরা,'},
+  {c:'quran',k:'467',n:'এস,এম,. জাকির হোসেন'},
+  {c:'quran',k:'468',n:'নূরুন্নেছা'},
+  {c:'quran',k:'469',n:'মো:মোজাম্মেল'},
+  {c:'quran',k:'470',n:'সুবর্ণা হাসান'},
+  {c:'quran',k:'471',n:'মোছা :নাজরীন সরোয়ার'},
+  {c:'quran',k:'472',n:'সাইফুল ইসলাম'},
+  {c:'quran',k:'473',n:'মো: গোলাম মোস্তফা'},
+  {c:'quran',k:'474',n:'মোঃ কাজী নাসির'},
+  {c:'quran',k:'475',n:'মোঃ আবুল হাসান'},
+  {c:'quran',k:'476',n:'মোল্লা হোসাইন আহমদ'},
+  {c:'quran',k:'477',n:'হাবিবুর রহমান'},
+  {c:'quran',k:'478',n:'মো: আসাদুজ্জামান'},
+  {c:'quran',k:'479',n:'মো: রেজওয়ানুল্লাহ'},
+  {c:'quran',k:'480',n:'মো: আশ্রাফুল ইসলম'},
+  {c:'quran',k:'481',n:'মো: তাওহীদুল ইসলাম'},
+  {c:'quran',k:'482',n:'মো: আতাউর রহমান (উজ্জল)'}
+];
+
+/* ── STATE ────────────────────────────────────────────────────── */
+var S   = JSON.parse(localStorage.getItem('prt3')||'{}');
+var cat = 'all';
+var st  = 'all';
+var qt  = null; // toast timer
+var sr  = null; // search debounce
+
+/* ── SECTION META ─────────────────────────────────────────────── */
+var M={
+  prak:    {lbl:'প্রাক প্রাথমিক',    co:'var(--bl)', bg:'var(--bl-bg)', bd:'var(--bl-bd)'},
+  boyosko: {lbl:'বয়স্ক',             co:'var(--ac)', bg:'var(--ac-bg)', bd:'var(--ac-bd)'},
+  quran:   {lbl:'সহজ কুরআন শিক্ষা', co:'var(--gr)', bg:'var(--gr-bg)', bd:'var(--gr-bd)'}
+};
+
+/* ── HELPERS ──────────────────────────────────────────────────── */
+function save(){localStorage.setItem('prt3',JSON.stringify(S));}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ── TOAST ────────────────────────────────────────────────────── */
+function showToast(){
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(qt);
+  qt=setTimeout(function(){t.classList.remove('show');},2000);
+}
+
+/* ── GLOBAL STATS ─────────────────────────────────────────────── */
+function updateStats(){
+  var tot=D.length;
+  var don=D.filter(function(t){return S[t.k];}).length;
+  var lft=tot-don;
+  document.getElementById('n-total').textContent=tot;
+  document.getElementById('n-done').textContent=don;
+  document.getElementById('n-left').textContent=lft;
+  var pct=tot?Math.round(don/tot*100):0;
+  document.getElementById('pct-lbl').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('sub-done').textContent=don+' জন জমা';
+  document.getElementById('sub-left').textContent=lft+' জন বাকি';
+}
+
+/* ── TOGGLE ───────────────────────────────────────────────────── */
+function toggle(k){
+  S[k]=!S[k];
+  save();
+  updateStats();
+  /* update row in place — no full re-render */
+  var row=document.querySelector('.tr[data-k="'+k+'"]');
+  if(!row)return;
+  var done=!!S[k];
+  row.classList.toggle('done',done);
+  var pill=row.querySelector('.tp');
+  if(pill){pill.className='tp '+(done?'pd':'pp');pill.textContent=done?'জমা ✓':'বাকি';}
+  /* update section mini counters */
+  var c=row.dataset.c;
+  var secDone=D.filter(function(t){return t.c===c&&S[t.k];}).length;
+  var secTot=D.filter(function(t){return t.c===c;}).length;
+  var md=document.getElementById('md-'+c),mp=document.getElementById('mp-'+c);
+  if(md)md.textContent=secDone;
+  if(mp)mp.textContent=secTot-secDone;
+  /* remove row if filter no longer matches */
+  if((st==='done'&&!done)||(st==='pend'&&done)){
+    row.style.transition='opacity .25s,transform .25s';
+    row.style.opacity='0';row.style.transform='translateX(10px)';
+    setTimeout(function(){row.remove();},260);
+  }
+  showToast();
+}
+
+/* ── FILTER CONTROLS ──────────────────────────────────────────── */
+function setCat(btn){
+  cat=btn.dataset.cat;
+  document.querySelectorAll('.fb').forEach(function(b){b.classList.toggle('on',b===btn);});
+  render();
+}
+function setSt(s){
+  st=s;
+  ['all','done','pend'].forEach(function(x){
+    var b=document.getElementById('sb-'+x);
+    b.className='stb'+(x===s?' on-'+x:'');
+  });
+  render();
+}
+
+/* ── SEARCH (debounced) ───────────────────────────────────────── */
+function onSearch(){
+  clearTimeout(sr);
+  sr=setTimeout(render,120);
+}
+
+/* ── RENDER ───────────────────────────────────────────────────── */
+function render(){
+  /* build search query: trim, lowercase, digits only for code match */
+  var raw=(document.getElementById('q').value||'').trim();
+  var ql=raw.toLowerCase();
+  var qNum=raw.replace(/\D/g,''); /* digits only from input */
+
+  var cats=cat==='all'?['prak','boyosko','quran']:[cat];
+  var html='';
+  var any=false;
+
+  cats.forEach(function(c,ci){
+    var m=M[c];
+    /* filter list */
+    var list=D.filter(function(t){
+      if(t.c!==c)return false;
+      /* ── search logic ── */
+      if(raw!==''){
+        var codeMatch=false;
+        if(qNum!==''){
+          /* numeric search: check if code starts with or equals the number */
+          codeMatch=(t.k===qNum)||(t.k.indexOf(qNum)===0)||(t.k.indexOf(qNum)!==-1);
+        }
+        var nameMatch=t.n.toLowerCase().indexOf(ql)!==-1;
+        if(!codeMatch&&!nameMatch)return false;
+      }
+      /* status filter */
+      if(st==='done'&&!S[t.k])return false;
+      if(st==='pend'&&S[t.k])return false;
+      return true;
+    });
+    if(!list.length)return;
+    any=true;
+
+    var catTot=D.filter(function(t){return t.c===c;}).length;
+    var catDon=D.filter(function(t){return t.c===c&&S[t.k];}).length;
+    var catLft=catTot-catDon;
+
+    html+='<div class="sec">';
+    /* section header */
+    html+='<div class="sec-hd">';
+    html+='<div class="sec-left">';
+    html+='<div class="sec-ico" style="background:'+m.bg+';color:'+m.co+'">'+secIcon(c)+'</div>';
+    html+='<div class="sec-name">'+m.lbl+'</div>';
+    html+='</div>';
+    html+='<div class="sec-pill" style="background:'+m.bg+';color:'+m.co+';border:1px solid '+m.bd+'">'+list.length+' জন</div>';
+    html+='</div>';
+    /* mini stats */
+    html+='<div class="mini">';
+    html+='<div class="ms mt"><div class="mn">'+catTot+'</div><div class="ml">মোট</div></div>';
+    html+='<div class="ms md"><div class="mn" id="md-'+c+'">'+catDon+'</div><div class="ml">জমা</div></div>';
+    html+='<div class="ms mp"><div class="mn" id="mp-'+c+'">'+catLft+'</div><div class="ml">বাকি</div></div>';
+    html+='</div>';
+    /* teacher list */
+    html+='<div class="tl">';
+    list.forEach(function(t,i){
+      var done=!!S[t.k];
+      var delay=(ci*0.06+i*0.018).toFixed(3);
+      html+='<div class="tr'+(done?' done':'')+'" data-k="'+t.k+'" data-c="'+c+'" style="animation:fd .28s '+delay+'s ease both" onclick="toggle(\''+t.k+'\')">';
+      html+='<div class="cb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>';
+      html+='<div class="tc">'+t.k+'</div>';
+      html+='<div class="tn">'+esc(t.n)+'</div>';
+      html+='<div class="tp '+(done?'pd':'pp')+'">'+(done?'জমা ✓':'বাকি')+'</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+    html+='</div>';
+  });
+
+  if(!any){
+    html='<div class="empty">'
+      +'<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--t2)" stroke-width="1.5" style="margin:0 auto;display:block"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>'
+      +'<p>কোনো শিক্ষক পাওয়া যায়নি।</p></div>';
+  }
+
+  document.getElementById('main').innerHTML=html;
+}
+
+/* ── SECTION ICONS (inline SVG) ──────────────────────────────── */
+function secIcon(c){
+  if(c==='prak')return'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+  if(c==='boyosko')return'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+  return'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>';
+}
+
+/* ── INIT ─────────────────────────────────────────────────────── */
+updateStats();
+render();
+</script>
+</body>
+</html>
